@@ -33,7 +33,7 @@ function escapeHtml(str) {
         .replace(/"/g, "&quot;");
 }
 
-// GENERADOR DE AVATAR PERSONALIZADO PARA CUALQUIER USUARIO (SIN FONDO NEGRO)
+// GENERADOR DE MONITOS KAWAII (GATITO, CONEJITO, OSITO, PANDITA, POLLITO, RANITA)
 function generarMonitoSVG(semilla = "Pinkfolio", saludando = false) {
     const str = String(semilla || "Pinkfolio").trim().toLowerCase();
     let hash = 0;
@@ -42,65 +42,100 @@ function generarMonitoSVG(semilla = "Pinkfolio", saludando = false) {
         hash |= 0;
     }
     const idx = Math.abs(hash);
+    const tipo = idx % 6; // 0: gatito, 1: conejito, 2: osito, 3: pandita, 4: pollito, 5: ranita
 
-    const pieles = ["#ffe0bd", "#f8cfa9", "#eab686", "#d29463", "#8d5524"];
-    const cabellos = ["#2c1b12", "#5c3d2e", "#1f1f29", "#8c3b5e", "#a46b39", "#4a2c40"];
-    const playeras = ["#d656a0", "#7c3aed", "#c94f96", "#4b2540", "#9b4dca", "#e06cae"];
-    const fondos = ["#ffe6f3", "#f3e8ff", "#fce7f3", "#ffd9ec"];
+    const fondos = ["#ffe6f3", "#f6e8ff", "#ffeaf5", "#fff0f7"];
+    const fondo = fondos[idx % fondos.length];
 
-    const piel = pieles[idx % pieles.length];
-    const cabello = cabellos[(idx + 1) % cabellos.length];
-    const playera = playeras[(idx + 2) % playeras.length];
-    const fondo = fondos[(idx + 3) % fondos.length];
-    const estiloPelo = idx % 5;
-    const tieneLentes = (idx % 3) === 0;
+    let orejas = "";
+    let caraColor = "#ffffff";
+    let detallesExtra = "";
+    let nariz = `<ellipse cx="50" cy="56" rx="3.2" ry="2.2" fill="#ff7eb6"/>`;
 
-    let peloAtras = "";
-    let peloFrente = "";
-
-    if (estiloPelo === 0) {
-        peloFrente = `<path d="M 30 43 C 29 22, 71 22, 70 43 C 68 33, 60 30, 50 30 C 40 30, 32 33, 30 43 Z" fill="${cabello}"/>`;
-    } else if (estiloPelo === 1) {
-        peloAtras = `<path d="M 24 44 C 20 75, 24 90, 32 94 L 68 94 C 76 90, 80 75, 76 44 Z" fill="${cabello}"/>`;
-        peloFrente = `<path d="M 30 44 C 30 24, 70 24, 70 44 C 65 34, 55 32, 48 36 C 42 32, 34 35, 30 44 Z" fill="${cabello}"/>`;
-    } else if (estiloPelo === 2) {
-        peloAtras = `
-            <circle cx="32" cy="34" r="11" fill="${cabello}"/>
-            <circle cx="68" cy="34" r="11" fill="${cabello}"/>
-            <circle cx="50" cy="24" r="13" fill="${cabello}"/>`;
-        peloFrente = `<path d="M 31 41 C 33 26, 67 26, 69 41 C 62 33, 38 33, 31 41 Z" fill="${cabello}"/>`;
-    } else if (estiloPelo === 3) {
-        peloAtras = `<circle cx="50" cy="19" r="12" fill="${cabello}"/>`;
-        peloFrente = `<path d="M 30 44 C 30 24, 70 24, 70 44 C 64 33, 36 33, 30 44 Z" fill="${cabello}"/>`;
+    if (tipo === 0) {
+        // Gatito blanco kawaii
+        caraColor = "#ffffff";
+        orejas = `
+            <polygon points="24,42 29,18 44,34" fill="#ffffff" stroke="#f3c6de" stroke-width="2" stroke-linejoin="round"/>
+            <polygon points="28,38 31,23 40,34" fill="#ffb3d9"/>
+            <polygon points="76,42 71,18 56,34" fill="#ffffff" stroke="#f3c6de" stroke-width="2" stroke-linejoin="round"/>
+            <polygon points="72,38 69,23 60,34" fill="#ffb3d9"/>`;
+        detallesExtra = `
+            <line x1="20" y1="53" x2="29" y2="55" stroke="#d49ab8" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="20" y1="59" x2="29" y2="59" stroke="#d49ab8" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="80" y1="53" x2="71" y2="55" stroke="#d49ab8" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="80" y1="59" x2="71" y2="59" stroke="#d49ab8" stroke-width="1.8" stroke-linecap="round"/>`;
+    } else if (tipo === 1) {
+        // Conejito rosa pastel
+        caraColor = "#fff7fb";
+        orejas = `
+            <ellipse cx="37" cy="24" rx="7" ry="18" transform="rotate(-10 37 24)" fill="#fff7fb" stroke="#f3c6de" stroke-width="2"/>
+            <ellipse cx="37" cy="24" rx="3.5" ry="12" transform="rotate(-10 37 24)" fill="#ffb3d9"/>
+            <ellipse cx="63" cy="24" rx="7" ry="18" transform="rotate(10 63 24)" fill="#fff7fb" stroke="#f3c6de" stroke-width="2"/>
+            <ellipse cx="63" cy="24" rx="3.5" ry="12" transform="rotate(10 63 24)" fill="#ffb3d9"/>`;
+    } else if (tipo === 2) {
+        // Osito miel kawaii
+        caraColor = "#f7d6b5";
+        orejas = `
+            <circle cx="29" cy="31" r="9.5" fill="#f7d6b5"/>
+            <circle cx="29" cy="31" r="5" fill="#e5a97b"/>
+            <circle cx="71" cy="31" r="9.5" fill="#f7d6b5"/>
+            <circle cx="71" cy="31" r="5" fill="#e5a97b"/>`;
+        detallesExtra = `<ellipse cx="50" cy="59" rx="10" ry="7.5" fill="#fff6eb"/>`;
+        nariz = `<ellipse cx="50" cy="56" rx="3.5" ry="2.4" fill="#6e473b"/>`;
+    } else if (tipo === 3) {
+        // Pandita kawaii
+        caraColor = "#ffffff";
+        orejas = `
+            <circle cx="29" cy="31" r="9.5" fill="#4a3544"/>
+            <circle cx="71" cy="31" r="9.5" fill="#4a3544"/>`;
+        detallesExtra = `
+            <ellipse cx="38" cy="51" rx="7.5" ry="6" transform="rotate(-15 38 51)" fill="#4a3544"/>
+            <ellipse cx="62" cy="51" rx="7.5" ry="6" transform="rotate(15 62 51)" fill="#4a3544"/>`;
+        nariz = `<ellipse cx="50" cy="57" rx="3.4" ry="2.2" fill="#4a3544"/>`;
+    } else if (tipo === 4) {
+        // Pollito esponjoso
+        caraColor = "#fff0a6";
+        orejas = `<path d="M 46 27 Q 50 18 53 26 Q 57 19 58 28" stroke="#f5c842" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+        nariz = `<polygon points="46,56 54,56 50,61" fill="#ff9f43"/>`;
     } else {
-        peloAtras = `<path d="M 25 44 C 22 65, 28 74, 34 76 L 66 76 C 72 74, 78 65, 75 44 Z" fill="${cabello}"/>`;
-        peloFrente = `<path d="M 30 44 C 30 24, 70 24, 70 44 C 65 34, 55 32, 48 36 C 42 32, 34 35, 30 44 Z" fill="${cabello}"/>`;
+        // Ranita kawaii
+        caraColor = "#c8f2c2";
+        orejas = `
+            <circle cx="35" cy="31" r="9" fill="#c8f2c2"/>
+            <circle cx="65" cy="31" r="9" fill="#c8f2c2"/>`;
+        nariz = "";
     }
 
-    const brazoSaludo = saludando
-        ? `<path d="M 74 78 Q 88 64 85 50" stroke="${piel}" stroke-width="7" stroke-linecap="round" fill="none"/>
-           <circle cx="85" cy="49" r="4.5" fill="${piel}"/>`
+    const patitaSaludo = saludando
+        ? `<ellipse cx="80" cy="69" rx="6.5" ry="8.5" transform="rotate(28 80 69)" fill="${caraColor}" stroke="#f3c6de" stroke-width="1.8"/>`
         : "";
 
     return `
     <svg viewBox="0 0 100 100" width="100%" height="100%" style="background-color: ${fondo}; display: block;" xmlns="http://www.w3.org/2000/svg">
         <rect x="0" y="0" width="100" height="100" fill="${fondo}"/>
-        ${peloAtras}
-        <path d="M 24 96 C 24 76, 36 72, 50 72 C 64 72, 76 76, 76 96 Z" fill="${playera}"/>
-        <rect x="44" y="61" width="12" height="14" rx="5" fill="${piel}"/>
-        <ellipse cx="50" cy="46" rx="20" ry="22" fill="${piel}"/>
-        ${peloFrente}
-        <circle cx="42" cy="46" r="2.7" fill="#3a1d31"/>
-        <circle cx="58" cy="46" r="2.7" fill="#3a1d31"/>
-        <circle cx="43" cy="45" r="0.9" fill="#ffffff"/>
-        <circle cx="59" cy="45" r="0.9" fill="#ffffff"/>
-        ${tieneLentes ? `
-            <circle cx="42" cy="46" r="6.5" stroke="#4b2540" stroke-width="1.8" fill="none"/>
-            <circle cx="58" cy="46" r="6.5" stroke="#4b2540" stroke-width="1.8" fill="none"/>
-            <line x1="48.5" y1="46" x2="51.5" y2="46" stroke="#4b2540" stroke-width="1.8"/>
-        ` : ""}
-        <path d="M 45 54 Q 50 59 55 54" stroke="#8f2664" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-        ${brazoSaludo}
+        ${orejas}
+        <!-- Cuerpo tierno -->
+        <path d="M 30 96 C 30 78, 70 78, 70 96 Z" fill="${caraColor}" stroke="#f3c6de" stroke-width="1.8"/>
+        <!-- Moñito rosa -->
+        <polygon points="50,79 42,74 42,84" fill="#ff6eb4"/>
+        <polygon points="50,79 58,74 58,84" fill="#ff6eb4"/>
+        <circle cx="50" cy="79" r="2.6" fill="#d656a0"/>
+        <!-- Cabecita gordita -->
+        <ellipse cx="50" cy="53" rx="26" ry="23" fill="${caraColor}" stroke="#f3c6de" stroke-width="1.8"/>
+        ${detallesExtra}
+        <!-- Chapetes rosados -->
+        <ellipse cx="32" cy="58" rx="4.8" ry="3" fill="#ff9ec9" opacity="0.75"/>
+        <ellipse cx="68" cy="58" rx="4.8" ry="3" fill="#ff9ec9" opacity="0.75"/>
+        <!-- Ojitos kawaii brillantes -->
+        <circle cx="39" cy="51" r="3.6" fill="#3a1d31"/>
+        <circle cx="61" cy="51" r="3.6" fill="#3a1d31"/>
+        <circle cx="40.3" cy="49.7" r="1.4" fill="#ffffff"/>
+        <circle cx="62.3" cy="49.7" r="1.4" fill="#ffffff"/>
+        ${nariz}
+        <!-- Boquita de gatito -->
+        <path d="M 45 61 Q 47.5 64 50 61 Q 52.5 64 55 61" stroke="#6e3b58" stroke-width="2" stroke-linecap="round" fill="none"/>
+        ${patitaSaludo}
     </svg>`;
 }
 
@@ -404,7 +439,7 @@ function renderizarObjetoUnico(clave, contenedorId, tituloFallback, lineasHtml) 
 document.addEventListener("DOMContentLoaded", () => {
     const loginLogo = document.getElementById("avatarLoginPreview");
     if (loginLogo) {
-        loginLogo.innerHTML = generarMonitoSVG("HolaPinkfolio", true);
+        loginLogo.innerHTML = generarMonitoSVG("GatitoKawaii", true);
     }
 
     SECCIONES_MEDIA.forEach((sec) => {

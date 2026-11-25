@@ -1,4 +1,4 @@
-const CACHE_NAME = "pinkfolio-v2";
+const CACHE_NAME = "pinkfolio-v3";
 const ARCHIVOS_CACHE = [
     "./",
     "./index.html",
