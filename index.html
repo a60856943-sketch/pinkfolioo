@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#ffeef6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Pinkfolio">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/6997/6997662.png">
+    <link rel="stylesheet" href="style.css">
+    <title>Pinkfolio | Tu historia, tus logros</title>
+</head>
+<body>
+    <!-- NOTIFICACIÓN TOAST -->
+    <div id="toast" class="toast oculto">Operación realizada</div>
+
+    <div class="app">
+
+        <!-- PANTALLA LOGIN -->
+        <section id="login" class="pantalla">
+            <div class="card-auth">
+                <div class="logo-circulo" id="avatarLoginPreview"></div>
+                <h1>Pinkfolio</h1>
+                <p class="subtitulo">Tu historia, tus logros</p>
+                <h2>¡Hola!</h2>
+                <p class="descripcion">Inicia sesión para continuar con tu portafolio.</p>
+
+                <div id="alertaLogin" class="alerta oculto"></div>
+
+                <form id="formLogin" novalidate>
+                    <label for="correoLogin">Correo electrónico</label>
+                    <input type="email" id="correoLogin" required placeholder="tu.correo@ejemplo.com" autocomplete="email">
+
+                    <label for="passwordLogin">Contraseña</label>
+                    <div class="input-password-wrap">
+                        <input type="password" id="passwordLogin" required placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="btn-ver-pass" onclick="togglePassword('passwordLogin', this)">Ver</button>
+                    </div>
+
+                    <button type="submit" class="btn-primario">Iniciar sesión</button>
+                </form>
+
+                <div class="acciones-auth">
+                    <button type="button" class="btn-secundario" onclick="mostrarRegistro()">Crear una cuenta</button>
+                    <button type="button" class="btn-invitado" onclick="accesoInvitado()">Entrar como invitado</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA REGISTRO -->
+        <section id="registro" class="pantalla oculto">
+            <div class="card-auth">
+                <div class="logo-circulo" id="avatarRegistroPreview"></div>
+                <h1>Pinkfolio</h1>
+                <p class="subtitulo">Tu avatar se crea con tu nombre</p>
+                <h2>Crear cuenta</h2>
+
+                <div id="alertaRegistro" class="alerta oculto"></div>
+
+                <form id="formRegistro" novalidate>
+                    <label for="nombreRegistro">Nombre completo *</label>
+                    <input type="text" id="nombreRegistro" required placeholder="Escribe tu nombre para ver tu avatar" oninput="actualizarAvatarRegistro(this.value)">
+
+                    <label for="areaRegistro">Carrera o especialidad *</label>
+                    <input type="text" id="areaRegistro" required placeholder="Ej. Ingeniería / Diseño UX">
+
+                    <label for="correoRegistro">Correo electrónico *</label>
+                    <input type="email" id="correoRegistro" required placeholder="tu.correo@ejemplo.com" autocomplete="email">
+
+                    <label for="passwordRegistro">Contraseña (mín. 6 caracteres) *</label>
+                    <div class="input-password-wrap">
+                        <input type="password" id="passwordRegistro" required minlength="6" placeholder="••••••••">
+                        <button type="button" class="btn-ver-pass" onclick="togglePassword('passwordRegistro', this)">Ver</button>
+                    </div>
+
+                    <label for="confirmarPasswordRegistro">Confirmar contraseña *</label>
+                    <input type="password" id="confirmarPasswordRegistro" required minlength="6" placeholder="••••••••">
+
+                    <button type="submit" class="btn-primario">Registrarme</button>
+                </form>
+
+                <div class="acciones-auth">
+                    <button type="button" class="btn-secundario" onclick="mostrarLogin()">Volver al inicio de sesión</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- APLICACIÓN PRINCIPAL -->
+        <main id="principal" class="oculto">
+            <header class="topbar">
+                <div class="topbar-user">
+                    <div id="avatarTopbar" class="avatar-mini"></div>
+                    <div>
+                        <div class="topbar-titulo">
+                            <h1>Pinkfolio</h1>
+                            <span id="badgeRol" class="badge-rol">Admin</span>
+                        </div>
+                        <p>Hola, <span id="nombreUsuario">Usuario</span></p>
+                    </div>
+                </div>
+                <button type="button" class="btn-salir" onclick="cerrarSesion()">Salir</button>
+            </header>
+
+            <nav class="menu-secciones" id="menuSecciones">
+                <button type="button" data-sec="inicio" class="activo" onclick="mostrarSeccion('inicio')">Inicio</button>
+                <button type="button" data-sec="perfil" onclick="mostrarSeccion('perfil')">Perfil</button>
+                <button type="button" data-sec="academica" onclick="mostrarSeccion('academica')">Académica</button>
+                <button type="button" data-sec="practicas" onclick="mostrarSeccion('practicas')">Prácticas</button>
+                <button type="button" data-sec="extra" onclick="mostrarSeccion('extra')">Actividades extra</button>
+                <button type="button" data-sec="experiencia" onclick="mostrarSeccion('experiencia')">Experiencia</button>
+                <button type="button" data-sec="intereses" onclick="mostrarSeccion('intereses')">Intereses y metas</button>
+                <button type="button" data-sec="habilidades" onclick="mostrarSeccion('habilidades')">Habilidades</button>
+                <button type="button" data-sec="proyectos" onclick="mostrarSeccion('proyectos')">Proyectos</button>
+            </nav>
+
+            <!-- INICIO -->
+            <section id="inicio" class="seccion">
+                <div class="card" id="resumenInicio"></div>
+            </section>
+
+            <!-- PERFIL -->
+            <section id="perfil" class="seccion oculto">
+                <div class="card">
+                    <h2>Datos de perfil</h2>
+                    <form id="formPerfil" class="solo-admin">
+                        <label for="pNombre">Nombre completo</label>
+                        <input type="text" id="pNombre" placeholder="Nombre completo">
+
+                        <label for="pTelefono">Teléfono</label>
+                        <input type="tel" id="pTelefono" placeholder="Teléfono">
+
+                        <label for="pCorreo">Correo</label>
+                        <input type="email" id="pCorreo" placeholder="Correo">
+
+                        <label for="pMatricula">Matrícula (privada, no sale en CV)</label>
+                        <input type="text" id="pMatricula" placeholder="Matrícula">
+
+                        <label for="pCurp">CURP (privada, no sale en CV)</label>
+                        <input type="text" id="pCurp" placeholder="CURP">
+
+                        <label for="pArea">Área o especialidad</label>
+                        <input type="text" id="pArea" placeholder="Área o especialidad">
+
+                        <label for="pBio">Biografía / Presentación</label>
+                        <textarea id="pBio" rows="3" placeholder="Cuéntanos sobre ti..."></textarea>
+
+                        <label for="fotoPerfil">Foto de perfil (opcional, si no subes se usa tu avatar)</label>
+                        <input type="file" id="fotoPerfil" accept="image/*">
+                        <img id="previewFotoPerfil" class="preview-img oculto" alt="Vista previa de perfil">
+
+                        <label for="archivoPerfil">Archivo adjunto (CV, constancia, etc.)</label>
+                        <input type="file" id="archivoPerfil">
+                        <p id="previewArchivoPerfil" class="preview-archivo oculto"></p>
+
+                        <button type="button" class="btn-secundario" onclick="limpiarMediaFormulario('perfil')">Quitar foto y archivo</button>
+                        <button type="submit" class="btn-primario">Guardar perfil</button>
+                    </form>
+                    <div id="vistaGuardadaPerfil" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- ACADÉMICA -->
+            <section id="academica" class="seccion oculto">
+                <div class="card">
+                    <h2>Formación académica</h2>
+                    <form id="formAcademica" class="solo-admin">
+                        <label for="institucion">Institución</label>
+                        <input type="text" id="institucion" placeholder="Universidad / Escuela">
+
+                        <label for="carrera">Carrera o certificado</label>
+                        <input type="text" id="carrera" placeholder="Carrera">
+
+                        <label for="semestre">Semestre o cuatrimestre</label>
+                        <input type="text" id="semestre" placeholder="Ej. 4to cuatrimestre">
+
+                        <label for="periodo">Periodo</label>
+                        <input type="text" id="periodo" placeholder="Ej. 2023 - 2026">
+
+                        <label for="fotoAcademica">Foto o evidencia académica</label>
+                        <input type="file" id="fotoAcademica" accept="image/*">
+                        <img id="previewFotoAcademica" class="preview-img oculto" alt="Vista previa académica">
+
+                        <label for="archivoAcademica">Archivo académico</label>
+                        <input type="file" id="archivoAcademica">
+                        <p id="previewArchivoAcademica" class="preview-archivo oculto"></p>
+
+                        <button type="button" class="btn-secundario" onclick="limpiarMediaFormulario('academica')">Quitar foto y archivo</button>
+                        <button type="submit" class="btn-primario">Guardar información académica</button>
+                    </form>
+                    <div id="vistaGuardadaAcademica" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- PRÁCTICAS -->
+            <section id="practicas" class="seccion oculto">
+                <div class="card">
+                    <h2>Prácticas / Estadías</h2>
+                    <form id="formPracticas" class="solo-admin">
+                        <label for="empresaPracticas">Empresa o institución</label>
+                        <input type="text" id="empresaPracticas" placeholder="Nombre de la empresa">
+
+                        <label for="areaPracticas">Área o rol</label>
+                        <input type="text" id="areaPracticas" placeholder="Área o departamento">
+
+                        <label for="actividadesPracticas">Actividades realizadas</label>
+                        <textarea id="actividadesPracticas" rows="3" placeholder="Describe tus actividades"></textarea>
+
+                        <label for="periodoPracticas">Periodo</label>
+                        <input type="text" id="periodoPracticas" placeholder="Ej. Enero - Abril 2026">
+
+                        <label for="fotoPracticas">Foto o evidencia de prácticas</label>
+                        <input type="file" id="fotoPracticas" accept="image/*">
+                        <img id="previewFotoPracticas" class="preview-img oculto" alt="Vista previa prácticas">
+
+                        <label for="archivoPracticas">Archivo de prácticas</label>
+                        <input type="file" id="archivoPracticas">
+                        <p id="previewArchivoPracticas" class="preview-archivo oculto"></p>
+
+                        <button type="button" class="btn-secundario" onclick="limpiarMediaFormulario('practicas')">Quitar foto y archivo</button>
+                        <button type="submit" class="btn-primario">Guardar prácticas</button>
+                    </form>
+                    <div id="vistaGuardadaPracticas" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- ACTIVIDADES EXTRA -->
+            <section id="extra" class="seccion oculto">
+                <div class="card">
+                    <h2>Formación extracurricular</h2>
+                    <form id="formExtra" class="solo-admin">
+                        <label for="tipoExtra">Tipo de actividad</label>
+                        <select id="tipoExtra">
+                            <option value="Certificación">Certificación</option>
+                            <option value="Curso">Curso</option>
+                            <option value="Taller">Taller</option>
+                            <option value="Congreso">Congreso / Evento</option>
+                        </select>
+
+                        <label for="actividad">Actividad o curso *</label>
+                        <input type="text" id="actividad" required placeholder="Nombre de la actividad">
+
+                        <label for="descripcionExtra">Institución / Detalles</label>
+                        <textarea id="descripcionExtra" rows="2" placeholder="Institución emisora o competencias adquiridas"></textarea>
+
+                        <label for="fechaExtra">Fecha o duración</label>
+                        <input type="text" id="fechaExtra" placeholder="Ej. Octubre 2026 • 40 hrs">
+
+                        <label for="fotoExtra">Foto o constancia</label>
+                        <input type="file" id="fotoExtra" accept="image/*">
+                        <img id="previewFotoExtra" class="preview-img oculto" alt="Vista previa extra">
+
+                        <label for="archivoExtra">Archivo adjunto</label>
+                        <input type="file" id="archivoExtra">
+                        <p id="previewArchivoExtra" class="preview-archivo oculto"></p>
+
+                        <button type="submit" class="btn-primario">Agregar actividad</button>
+                    </form>
+                    <div id="listaExtra" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- EXPERIENCIA -->
+            <section id="experiencia" class="seccion oculto">
+                <div class="card">
+                    <h2>Experiencia laboral</h2>
+                    <form id="formExperiencia" class="solo-admin">
+                        <label for="empresa">Empresa *</label>
+                        <input type="text" id="empresa" required placeholder="Nombre de la empresa">
+
+                        <label for="puesto">Puesto *</label>
+                        <input type="text" id="puesto" required placeholder="Tu puesto o rol">
+
+                        <label for="descripcionTrabajo">Descripción</label>
+                        <textarea id="descripcionTrabajo" rows="2" placeholder="Funciones o logros"></textarea>
+
+                        <label for="periodoTrabajo">Periodo</label>
+                        <input type="text" id="periodoTrabajo" placeholder="Ej. 2025 - Presente">
+
+                        <label for="fotoExperiencia">Foto o evidencia laboral</label>
+                        <input type="file" id="fotoExperiencia" accept="image/*">
+                        <img id="previewFotoExperiencia" class="preview-img oculto" alt="Vista previa experiencia">
+
+                        <label for="archivoExperiencia">Archivo laboral</label>
+                        <input type="file" id="archivoExperiencia">
+                        <p id="previewArchivoExperiencia" class="preview-archivo oculto"></p>
+
+                        <button type="submit" class="btn-primario">Guardar experiencia</button>
+                    </form>
+                    <div id="listaExperiencia" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- INTERESES Y METAS -->
+            <section id="intereses" class="seccion oculto">
+                <div class="card">
+                    <h2>Intereses y metas</h2>
+                    <form id="formIntereses" class="solo-admin">
+                        <label for="categoriaInteres">Categoría</label>
+                        <select id="categoriaInteres">
+                            <option value="Interés profesional">Interés profesional</option>
+                            <option value="Meta a 3 meses">Meta a 3 meses</option>
+                            <option value="Meta a 6 meses">Meta a 6 meses</option>
+                            <option value="Meta a 1 año">Meta a 1 año</option>
+                            <option value="Afición">Afición</option>
+                        </select>
+
+                        <label for="interes">Título o meta *</label>
+                        <input type="text" id="interes" required placeholder="Ej. Desarrollo móvil, Certificarme en UX">
+
+                        <label for="descripcionInteres">Descripción</label>
+                        <textarea id="descripcionInteres" rows="2" placeholder="¿Por qué es importante para ti?"></textarea>
+
+                        <label for="fotoIntereses">Foto relacionada</label>
+                        <input type="file" id="fotoIntereses" accept="image/*">
+                        <img id="previewFotoIntereses" class="preview-img oculto" alt="Vista previa interés">
+
+                        <label for="archivoIntereses">Archivo adjunto</label>
+                        <input type="file" id="archivoIntereses">
+                        <p id="previewArchivoIntereses" class="preview-archivo oculto"></p>
+
+                        <button type="submit" class="btn-primario">Agregar interés o meta</button>
+                    </form>
+                    <div id="listaIntereses" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- HABILIDADES -->
+            <section id="habilidades" class="seccion oculto">
+                <div class="card">
+                    <h2>Habilidades</h2>
+                    <form id="formHabilidades" class="solo-admin">
+                        <label for="tipoHabilidad">Tipo de habilidad</label>
+                        <select id="tipoHabilidad">
+                            <option value="Técnica">Habilidad Técnica</option>
+                            <option value="Blanda">Habilidad Blanda</option>
+                        </select>
+
+                        <label for="habilidad">Habilidad *</label>
+                        <input type="text" id="habilidad" required placeholder="Ej. HTML/CSS, Liderazgo, SQL">
+
+                        <label for="nivelHabilidad">Nivel</label>
+                        <input type="text" id="nivelHabilidad" placeholder="Ej. Intermedio / Avanzado">
+
+                        <label for="fotoHabilidades">Foto o certificado</label>
+                        <input type="file" id="fotoHabilidades" accept="image/*">
+                        <img id="previewFotoHabilidades" class="preview-img oculto" alt="Vista previa habilidad">
+
+                        <label for="archivoHabilidades">Archivo adjunto</label>
+                        <input type="file" id="archivoHabilidades">
+                        <p id="previewArchivoHabilidades" class="preview-archivo oculto"></p>
+
+                        <button type="submit" class="btn-primario">Guardar habilidad</button>
+                    </form>
+                    <div id="listaHabilidades" class="lista-items"></div>
+                </div>
+            </section>
+
+            <!-- PROYECTOS -->
+            <section id="proyectos" class="seccion oculto">
+                <div class="card">
+                    <h2>Proyectos</h2>
+                    <form id="formProyectos" class="solo-admin">
+                        <label for="nombreProyecto">Nombre del proyecto *</label>
+                        <input type="text" id="nombreProyecto" required placeholder="Ej. Pinkfolio">
+
+                        <label for="descripcionProyecto">Descripción</label>
+                        <textarea id="descripcionProyecto" rows="2" placeholder="¿De qué trata el proyecto?"></textarea>
+
+                        <label for="tecnologias">Tecnologías o rol</label>
+                        <input type="text" id="tecnologias" placeholder="Ej. HTML, CSS, JS • Desarrollo Frontend">
+
+                        <label for="fotoProyecto">Foto o captura del proyecto</label>
+                        <input type="file" id="fotoProyecto" accept="image/*">
+                        <img id="previewFotoProyecto" class="preview-img oculto" alt="Vista previa del proyecto">
+
+                        <label for="archivoProyecto">Archivo del proyecto (PDF, ZIP, documento, etc.)</label>
+                        <input type="file" id="archivoProyecto">
+                        <p id="previewArchivoProyecto" class="preview-archivo oculto"></p>
+
+                        <button type="submit" class="btn-primario">Guardar proyecto</button>
+                    </form>
+                    <div id="listaProyectos" class="lista-items"></div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
